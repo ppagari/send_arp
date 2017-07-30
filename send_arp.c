@@ -86,7 +86,6 @@ int main(int argc,char *argv[]){
 	struct in_addr send_addr;
 	struct in_addr tar_addr;	
 	char my_mac[6];
-	char send_mac[6];
 	char target_mac[6];
 
 
@@ -94,7 +93,7 @@ int main(int argc,char *argv[]){
 	int fd,i;
 
 	if(argc < 3){
-		printf("[*]plz input : target_ip sender_ip\n");
+		printf("[*] plz input : ./send_arp sender_ip target_ip\n");
 		exit(1);
 	}
 
@@ -125,8 +124,6 @@ int main(int argc,char *argv[]){
 	memset(global_mac,0xFF,6);
 	memset(packet,0x00,1000);
 
-	/* add get my ip*/
-
 	inet_pton(AF_INET, argv[2], &send_addr.s_addr);
 	inet_pton(AF_INET, argv[3], &tar_addr.s_addr);
 	
@@ -146,6 +143,7 @@ int main(int argc,char *argv[]){
 	make_arp(packet,target_mac,tar_addr.s_addr,my_mac,send_addr.s_addr,0x0200);
 	while(1){
 		pcap_sendpacket(handle,packet,42);
+		printf("[*] send modified arp packet\n")
 		sleep(1);
 	}
 
